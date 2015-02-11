@@ -20,12 +20,17 @@ sf::Sprite createSprite(sf::Texture texture)
 	return sprite;
 }
 
-sf::Sprite drawSprite(Elite obj)
+sf::Sprite drawSprite(Elite obj, float xLoc, float yLoc, int rotation)
 {
+	sf::Vector2f location = sf::Vector2f(xLoc, yLoc);
+
 	sf::Texture texture;
 	sf::Sprite sprite;
 	texture = setTexture(obj.texture);
 	sprite = createSprite(texture);
+
+	sprite.setPosition(location);
+	sprite.setRotation(rotation);
 
 	return sprite;
 }
@@ -84,8 +89,8 @@ void Render::update(World& world)
 	window.clear(sf::Color::Black);
 	
 	Elite enemy1;
-
-	window.draw(drawSprite(enemy1));
+	
+	window.draw(drawSprite(enemy1, 0, 0, 0));
 
 	// draw everything here...
 	// window.draw(...);
