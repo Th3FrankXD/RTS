@@ -7,6 +7,8 @@ public:
 	std::string texture = "elite.png";
 };
 
+
+
 class Spartan :Unit
 {
 public:

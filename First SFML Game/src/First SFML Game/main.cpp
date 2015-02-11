@@ -3,6 +3,34 @@
 #include <iostream>
 #include "gameObjects.h"
 
+sf::Texture setTexture(std::string texturePath)
+{
+	sf::Texture texture;
+	if (!texture.loadFromFile(texturePath))
+	{
+		// error...
+	}
+	return texture;
+}
+
+sf::Sprite createSprite(sf::Texture texture)
+{
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	return sprite;
+}
+
+void drawSprite(Elite obj, sf::RenderWindow window)
+{
+	//texture = setTexture(obj.texture);
+	//sprite = createSprite(texture);
+
+	//window.draw(sprite);
+
+	window.draw(createSprite(setTexture(obj.texture)));
+}
+
+
 class World
 {
 public:
@@ -54,6 +82,9 @@ void Render::update(World& world)
 	}
 	// clear the window with black color
 	window.clear(sf::Color::Black);
+	
+	Elite enemy1;
+	drawSprite(enemy1, window);
 
 	// draw everything here...
 	// window.draw(...);
@@ -70,9 +101,7 @@ int main()
 	
 	Elite enemy1;
 	Spartan ally1;
-	std::cout << enemy1.texture;
-	std::cout << ally1.texture;
-
+	
 	while (true)
 	{
 		world.update();
