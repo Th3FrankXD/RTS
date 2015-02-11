@@ -20,14 +20,14 @@ sf::Sprite createSprite(sf::Texture texture)
 	return sprite;
 }
 
-void drawSprite(Elite obj, sf::RenderWindow window)
+sf::Sprite drawSprite(Elite obj)
 {
-	//texture = setTexture(obj.texture);
-	//sprite = createSprite(texture);
+	sf::Texture texture;
+	sf::Sprite sprite;
+	texture = setTexture(obj.texture);
+	sprite = createSprite(texture);
 
-	//window.draw(sprite);
-
-	window.draw(createSprite(setTexture(obj.texture)));
+	return sprite;
 }
 
 
@@ -84,7 +84,8 @@ void Render::update(World& world)
 	window.clear(sf::Color::Black);
 	
 	Elite enemy1;
-	drawSprite(enemy1, window);
+
+	window.draw(drawSprite(enemy1));
 
 	// draw everything here...
 	// window.draw(...);
@@ -98,9 +99,6 @@ int main()
 {
 	World world;
 	Render renderer;
-	
-	Elite enemy1;
-	Spartan ally1;
 	
 	while (true)
 	{
