@@ -36,14 +36,8 @@ World::World()
 {
 }
 
-//WorldLoop
-void World::update()
+void moveToTarget()
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		enemy.target = sf::Mouse::getPosition(window);
-	}
-
 	if (enemy.xLoc - enemy.target.x < -enemy.speed || enemy.xLoc - enemy.target.x > enemy.speed)
 	{
 		if (enemy.xLoc < enemy.target.x)
@@ -75,6 +69,17 @@ void World::update()
 	{
 		enemy.yLoc = enemy.target.y;
 	}
+}
+
+//WorldLoop
+void World::update()
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		enemy.target = sf::Mouse::getPosition(window);
+	}
+
+	moveToTarget();
 }
 
 
