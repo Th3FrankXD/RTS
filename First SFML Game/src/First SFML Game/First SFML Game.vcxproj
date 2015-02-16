@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClCompile Include="gameObjects.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="textureCollector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObjects.h" />
+    <ClInclude Include="textureCollector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5645B10E-B433-42A1-941B-1C9B7E928725}</ProjectGuid>

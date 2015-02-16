@@ -21,9 +21,15 @@
     <ClCompile Include="gameObjects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="textureCollector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObjects.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="textureCollector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
