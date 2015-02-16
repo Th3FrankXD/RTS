@@ -19,7 +19,7 @@ public:
 	float xLoc = 0.0;
 	float yLoc = 0.0;
 	float rotation = 0.0;
-	float speed = 2.0;
+	float speed = 5.0;
 	sf::Vector2i target;
 };
 
