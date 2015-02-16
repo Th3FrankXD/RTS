@@ -44,28 +44,22 @@ void World::update()
 		enemy.target = sf::Mouse::getPosition(window);
 	}
 
-	if (enemy.xLoc - enemy.target.x < -(enemy.speed / 5) || enemy.xLoc - enemy.target.x > (enemy.speed / 5))
+	if (enemy.xLoc < enemy.target.x)
 	{
-		if (enemy.xLoc < enemy.target.x)
-		{
-			enemy.xLoc += enemy.speed;
-		}
-		else
-		{
-			enemy.xLoc -= enemy.speed;
-		}
+		enemy.xLoc += enemy.speed;
+	}
+	else
+	{
+		enemy.xLoc -= enemy.speed;
 	}
 
-	if (enemy.yLoc - enemy.target.y < -(enemy.speed / 5) || enemy.yLoc - enemy.target.y > (enemy.speed / 5))
+	if (enemy.yLoc < enemy.target.y)
 	{
-		if (enemy.yLoc < enemy.target.y)
-		{
-			enemy.yLoc += enemy.speed;
-		}
-		else
-		{
-			enemy.yLoc -= enemy.speed;
-		}
+		enemy.yLoc += enemy.speed;
+	}
+	else
+	{
+		enemy.yLoc -= enemy.speed;
 	}
 }
 
