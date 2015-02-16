@@ -1,23 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 #include "gameObjects.h"
-#include "textureCollector.h"
 
-TextureCollection textures;
+Elite enemy;
 
-sf::Sprite drawSprite(const Unit& obj, float xLoc, float yLoc, int rotation=0)
+sf::Sprite* drawSprite(const sf::Texture* texture, float xLoc, float yLoc, float rotation)
 {
 	sf::Sprite* sprite = new sf::Sprite;
 	sf::Vector2f location = sf::Vector2f(xLoc, yLoc);
 
-	sprite->setTexture(*textures.elite);
+	sprite->setTexture(*texture);
 
-	sprite->setOrigin((textures.elite->getSize().x / 2), (textures.elite->getSize().y / 2));
+	sprite->setOrigin((texture->getSize().x / 2), (texture->getSize().y / 2));
 
 	sprite->setPosition(location);
 	sprite->setRotation(rotation);
 
-	return *sprite;
+	return sprite;
 }
 
 
@@ -69,11 +69,34 @@ void Render::update(World& world)
 	// clear the window with black color
 	window.clear(sf::Color::Black);
 	
-	Elite enemy1;
 	
 	// draw everything here...
-	window.draw(drawSprite(enemy1, 0.0, 0.0));
+	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.xLoc, enemy.yLoc, enemy.rotation);
+	window.draw(*sprite);
+	delete sprite;
 
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		enemy.target = sf::Mouse::getPosition(window);
+	}
+
+	if (enemy.xLoc < enemy.target.x)
+	{
+		enemy.xLoc += enemy.speed;
+	}
+	else
+	{
+		enemy.xLoc -= enemy.speed;
+	}
+
+	if (enemy.yLoc < enemy.target.y)
+	{
+		enemy.yLoc += enemy.speed;
+	}
+	else
+	{
+		enemy.yLoc -= enemy.speed;
+	}
 
 	// end the current frame
 	window.display();
