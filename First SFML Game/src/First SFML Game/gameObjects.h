@@ -1,19 +1,21 @@
-class Unit{};
+class Unit
+{
+public:
+	Unit(std::string texture);
+	std::string texture;
+};
 
-class Elite :Unit
+class Elite :public Unit
 {
 public:
 	Elite();
-	std::string texture = "elite.png";
 };
-
 
 
 class Spartan :Unit
 {
 public:
 	Spartan();
-	std::string texture = "spartan.png";
 };
 
 

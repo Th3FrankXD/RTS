@@ -1,11 +1,16 @@
 #include <string>
 #include "gameObjects.h"
 
-Elite::Elite()
+Unit::Unit(std::string texture) : texture(texture)
 {
 }
 
 
-Spartan::Spartan()
+Elite::Elite() :Unit("elite.png")
+{
+}
+
+
+Spartan::Spartan() :Unit("elite.png")
 {
 }

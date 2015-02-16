@@ -1,38 +1,23 @@
 #include <SFML/Graphics.hpp>
-#include <thread>
 #include <iostream>
 #include "gameObjects.h"
+#include "textureCollector.h"
 
-sf::Texture setTexture(std::string texturePath)
-{
-	sf::Texture texture;
-	if (!texture.loadFromFile(texturePath))
-	{
-		// error...
-	}
-	return texture;
-}
+TextureCollection textures;
 
-sf::Sprite createSprite(sf::Texture texture)
+sf::Sprite drawSprite(const Unit& obj, float xLoc, float yLoc, int rotation=0)
 {
-	sf::Sprite sprite;
-	sprite.setTexture(texture);
-	return sprite;
-}
-
-sf::Sprite drawSprite(Elite obj, float xLoc, float yLoc, int rotation)
-{
+	sf::Sprite* sprite = new sf::Sprite;
 	sf::Vector2f location = sf::Vector2f(xLoc, yLoc);
 
-	sf::Texture texture;
-	sf::Sprite sprite;
-	texture = setTexture(obj.texture);
-	sprite = createSprite(texture);
+	sprite->setTexture(*textures.elite);
 
-	sprite.setPosition(location);
-	sprite.setRotation(rotation);
+	sprite->setOrigin((textures.elite->getSize().x / 2), (textures.elite->getSize().y / 2));
 
-	return sprite;
+	sprite->setPosition(location);
+	sprite->setRotation(rotation);
+
+	return *sprite;
 }
 
 
@@ -43,12 +28,10 @@ public:
 	void update();
 };
 
-
 //INIT
 World::World()
 {
 }
-
 
 //WorldLoop
 void World::update()
@@ -66,12 +49,10 @@ private:
 	sf::RenderWindow window;
 };
 
-
 //INIT
 Render::Render() : window(sf::VideoMode(800, 600), "My window")
 {
 }
-
 
 //RenderLoop
 void Render::update(World& world)
@@ -90,10 +71,9 @@ void Render::update(World& world)
 	
 	Elite enemy1;
 	
-	window.draw(drawSprite(enemy1, 0, 0, 0));
-
 	// draw everything here...
-	// window.draw(...);
+	window.draw(drawSprite(enemy1, 0.0, 0.0));
+
 
 	// end the current frame
 	window.display();
