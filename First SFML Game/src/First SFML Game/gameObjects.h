@@ -11,15 +11,16 @@ public:
 	Unit();
 };
 
-class Elite :public Unit
+class Wrath :public Unit
 {
 public:
-	Elite();
-	sf::Texture* texture = textures.elite;
-	float xLoc = 0.0;
-	float yLoc = 0.0;
+	Wrath();
+	sf::Texture* texture = textures.wrath;
+	sf::Vector2f location;
+	sf::Color color = sf::Color(255, 255, 255);
 	float rotation = 0.0;
-	float speed = 5.0;
+	float speed = 3.0;
+	bool selected;
 	sf::Vector2i target;
 };
 

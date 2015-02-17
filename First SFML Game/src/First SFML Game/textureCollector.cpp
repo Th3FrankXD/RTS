@@ -3,11 +3,11 @@
  
 TextureCollection::TextureCollection()
 {
-       elite = new sf::Texture;
-       elite->loadFromFile("elite.png");
+       wrath = new sf::Texture;
+       wrath->loadFromFile("wrath.png");
 }
  
 TextureCollection::~TextureCollection()
 {
-       delete elite;
+       delete wrath;
 }

@@ -8,7 +8,7 @@ Unit::Unit()
 }
 
 
-Elite::Elite()
+Wrath::Wrath()
 {
 }
 

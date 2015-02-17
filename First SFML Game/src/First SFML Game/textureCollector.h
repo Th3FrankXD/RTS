@@ -6,5 +6,5 @@ public:
 	TextureCollection();
 	~TextureCollection();
 
-	sf::Texture* elite;
+	sf::Texture* wrath;
 };

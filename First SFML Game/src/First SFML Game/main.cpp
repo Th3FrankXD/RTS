@@ -6,15 +6,15 @@
 
 int fpsCap = 60;
 
-Elite enemy;
+Wrath enemy;
 sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 
-sf::Sprite* drawSprite(const sf::Texture* texture, float xLoc, float yLoc, float rotation)
+sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation, sf::Color color)
 {
 	sf::Sprite* sprite = new sf::Sprite;
-	sf::Vector2f location = sf::Vector2f(xLoc, yLoc);
 
 	sprite->setTexture(*texture);
+	sprite->setColor(color);
 
 	sprite->setOrigin((texture->getSize().x / 2), (texture->getSize().y / 2));
 
@@ -36,49 +36,83 @@ World::World()
 {
 }
 
+void rotateToVect(sf::Vector2i target)
+{
+	const float PI = 3.14159265;
+
+	float dx = enemy.location.x - target.x;
+	float dy = enemy.location.y - target.y;
+
+	float rotation = (atan2(dy, dx)) * 180 / PI;
+
+	enemy.rotation = rotation;
+}
+
 void moveToTarget()
 {
-	if (enemy.xLoc - enemy.target.x < -enemy.speed || enemy.xLoc - enemy.target.x > enemy.speed)
+	if (enemy.location.x - enemy.target.x < -enemy.speed || enemy.location.x - enemy.target.x > enemy.speed)
 	{
-		if (enemy.xLoc < enemy.target.x)
+		if (enemy.location.x < enemy.target.x)
 		{
-			enemy.xLoc += enemy.speed;
+			enemy.location.x += enemy.speed;
 		}
 		else
 		{
-			enemy.xLoc -= enemy.speed;
+			enemy.location.x -= enemy.speed;
 		}
 	}
 	else
 	{
-		enemy.xLoc = enemy.target.x;
+		enemy.location.x = enemy.target.x;
 	}
 
-	if (enemy.yLoc - enemy.target.y < -enemy.speed || enemy.yLoc - enemy.target.y > enemy.speed)
+	if (enemy.location.y - enemy.target.y < -enemy.speed || enemy.location.y - enemy.target.y > enemy.speed)
 	{
-		if (enemy.yLoc < enemy.target.y)
+		if (enemy.location.y < enemy.target.y)
 		{
-			enemy.yLoc += enemy.speed;
+			enemy.location.y += enemy.speed;
 		}
 		else
 		{
-			enemy.yLoc -= enemy.speed;
+			enemy.location.y -= enemy.speed;
 		}
 	}
 	else
 	{
-		enemy.yLoc = enemy.target.y;
+		enemy.location.y = enemy.target.y;
+	}
+}
+
+void checkMouseEvents()
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		if (abs(sf::Mouse::getPosition(window).x - enemy.location.x) < 30 &&
+			abs(sf::Mouse::getPosition(window).y - enemy.location.y) < 30)
+		{
+			enemy.selected = true;
+			enemy.color = sf::Color(255, 255, 100);
+		}
+		else
+		{
+			enemy.selected = false;
+			enemy.color = sf::Color(255, 255, 255);
+		}
+	}
+	if (enemy.selected)
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		{
+			enemy.target = sf::Mouse::getPosition(window);
+		}
 	}
 }
 
 //WorldLoop
 void World::update()
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		enemy.target = sf::Mouse::getPosition(window);
-	}
-
+	checkMouseEvents();
+	rotateToVect(enemy.target);
 	moveToTarget();
 }
 
@@ -111,7 +145,7 @@ void Render::update(World& world)
 	window.clear(sf::Color::Black);
 	
 	// draw everything here...
-	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.xLoc, enemy.yLoc, enemy.rotation);
+	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.location, enemy.rotation, enemy.color);
 	window.draw(*sprite);
 	delete sprite;
 
@@ -140,6 +174,7 @@ int main()
 		end = std::clock();
 
 		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
+		std::cout << duration << std::endl;
 		sleepTime = 1000 / fpsCap - duration;
 		if (sleepTime > 0)
 		{
