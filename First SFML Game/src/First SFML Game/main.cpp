@@ -44,8 +44,10 @@ void rotateToVect(sf::Vector2i target)
 	float dy = enemy.location.y - target.y;
 
 	float rotation = (atan2(dy, dx)) * 180 / PI;
-
-	enemy.rotation = rotation;
+	if (target.x != enemy.location.x && target.y != enemy.location.y)
+	{
+		enemy.rotation = rotation;
+	}
 }
 
 void moveToTarget()
