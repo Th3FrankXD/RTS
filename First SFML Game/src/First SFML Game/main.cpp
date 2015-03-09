@@ -1,15 +1,20 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <windows.h>
 #include "gameObjects.h"
 
+extern TextureCollection textures;
+
 int fpsCap = 60;
+sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
 Wrath enemy;
+
 sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 
-sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation, sf::Color color)
+sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation=0, sf::Color color=sf::Color(255, 255, 255))
 {
 	sf::Sprite* sprite = new sf::Sprite;
 
@@ -147,6 +152,41 @@ void Render::update(World& world)
 	window.clear(sf::Color::Black);
 	
 	// draw everything here...
+	std::ifstream openFile("map1.txt");
+	if (openFile.is_open())
+	{
+		while (!openFile.eof())
+		{
+			std::string id;
+			openFile >> id;
+
+			if (id == "0")
+			{
+				sf::Sprite* tile = drawSprite(textures.grass, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
+				window.draw(*tile);
+				delete tile;
+			}
+
+			if (id == "1")
+			{
+				sf::Sprite* tile = drawSprite(textures.rock, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
+				window.draw(*tile);
+				delete tile;
+			}
+
+			if (openFile.peek() == '\n')
+			{
+				mapLoc.y++;
+				mapLoc.x = 0;
+			}
+			else
+			{
+				mapLoc.x++;
+			}
+		}
+		mapLoc = sf::Vector2i(0, 0);
+	}
+
 	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.location, enemy.rotation, enemy.color);
 	window.draw(*sprite);
 	delete sprite;
