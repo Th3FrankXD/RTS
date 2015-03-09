@@ -57,7 +57,7 @@ void rotateToVect(sf::Vector2i target)
 
 void moveToTarget()
 {
-	if (enemy.location.x - enemy.target.x < -enemy.speed || enemy.location.x - enemy.target.x > enemy.speed)
+	if (abs(enemy.location.x - enemy.target.x) > enemy.speed)
 	{
 		if (enemy.location.x < enemy.target.x)
 		{
@@ -73,7 +73,7 @@ void moveToTarget()
 		enemy.location.x = enemy.target.x;
 	}
 
-	if (enemy.location.y - enemy.target.y < -enemy.speed || enemy.location.y - enemy.target.y > enemy.speed)
+	if (abs(enemy.location.y - enemy.target.y) > enemy.speed)
 	{
 		if (enemy.location.y < enemy.target.y)
 		{
