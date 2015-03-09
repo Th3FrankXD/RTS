@@ -17,4 +17,5 @@ TextureCollection::~TextureCollection()
 {
        delete wrath;
 	   delete grass;
+	   delete rock;
 }
