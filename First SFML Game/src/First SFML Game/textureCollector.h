@@ -9,4 +9,5 @@ public:
 	sf::Texture* wrath;
 	sf::Texture* grass;
 	sf::Texture* rock;
+	sf::Texture* tree;
 };

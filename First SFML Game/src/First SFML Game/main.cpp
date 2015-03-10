@@ -14,14 +14,17 @@ Wrath enemy;
 
 sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 
-sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation=0, sf::Color color=sf::Color(255, 255, 255))
+sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")
 {
 	sf::Sprite* sprite = new sf::Sprite;
 
 	sprite->setTexture(*texture);
 	sprite->setColor(color);
 
-	sprite->setOrigin((texture->getSize().x / 2), (texture->getSize().y / 2));
+	if (origin == "center")
+	{
+		sprite->setOrigin((texture->getSize().x / 2), (texture->getSize().y / 2));
+	}
 
 	sprite->setPosition(location);
 	sprite->setRotation(rotation);
@@ -90,6 +93,10 @@ void moveToTarget()
 	}
 }
 
+void updateMap()
+{
+}
+
 void checkMouseEvents()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -104,6 +111,12 @@ void checkMouseEvents()
 		{
 			enemy.selected = false;
 			enemy.color = sf::Color(255, 255, 255);
+		}
+
+		if (abs(sf::Mouse::getPosition(window).x - 100) < 30 &&
+			abs(sf::Mouse::getPosition(window).y - 100) < 30)
+		{
+			updateMap();
 		}
 	}
 	if (enemy.selected)
@@ -155,23 +168,37 @@ void Render::update(World& world)
 	std::ifstream openFile("map1.txt");
 	if (openFile.is_open())
 	{
+		int layer = 0;
 		while (!openFile.eof())
 		{
 			std::string id;
 			openFile >> id;
 
-			if (id == "0")
+			if (layer == 1)
 			{
-				sf::Sprite* tile = drawSprite(textures.grass, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
-				window.draw(*tile);
-				delete tile;
+				if (id == "1")
+				{
+					sf::Sprite* tile = drawSprite(textures.grass, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
+					window.draw(*tile);
+					delete tile;
+				}
+
+				if (id == "2")
+				{
+					sf::Sprite* tile = drawSprite(textures.rock, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
+					window.draw(*tile);
+					delete tile;
+				}
 			}
 
-			if (id == "1")
+			if (layer == 2)
 			{
-				sf::Sprite* tile = drawSprite(textures.rock, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
-				window.draw(*tile);
-				delete tile;
+				if (id == "1")
+				{
+					sf::Sprite* tile = drawSprite(textures.tree, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
+					window.draw(*tile);
+					delete tile;
+				}
 			}
 
 			if (openFile.peek() == '\n')
@@ -183,11 +210,25 @@ void Render::update(World& world)
 			{
 				mapLoc.x++;
 			}
+
+			if (id == "L1")
+			{
+				layer = 1;
+				mapLoc.x = 0;
+				mapLoc.y = 0;
+			}
+
+			if (id == "L2")
+			{
+				layer = 2;
+				mapLoc.x = 0;
+				mapLoc.y = 0;
+			}
 		}
 		mapLoc = sf::Vector2i(0, 0);
 	}
 
-	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.location, enemy.rotation, enemy.color);
+	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.location, enemy.rotation, enemy.color, "center");
 	window.draw(*sprite);
 	delete sprite;
 
