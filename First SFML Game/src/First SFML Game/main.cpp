@@ -8,6 +8,7 @@
 extern TextureCollection textures;
 
 int fpsCap = 60;
+
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
 Wrath enemy;
@@ -93,10 +94,6 @@ void moveToTarget()
 	}
 }
 
-void updateMap()
-{
-}
-
 void checkMouseEvents()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -111,12 +108,6 @@ void checkMouseEvents()
 		{
 			enemy.selected = false;
 			enemy.color = sf::Color(255, 255, 255);
-		}
-
-		if (abs(sf::Mouse::getPosition(window).x - 100) < 30 &&
-			abs(sf::Mouse::getPosition(window).y - 100) < 30)
-		{
-			updateMap();
 		}
 	}
 	if (enemy.selected)
