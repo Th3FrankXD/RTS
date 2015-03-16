@@ -5,6 +5,11 @@
 #include <windows.h>
 #include "gameObjects.h"
 
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+using namespace rapidjson;
+
 extern TextureCollection textures;
 
 int fpsCap = 60;
@@ -227,6 +232,42 @@ void Render::update(World& world)
 	window.display();
 }
 
+class Map
+{
+};
+
+void getFile(std::string* txt, std::string mapName)
+{
+	std::ifstream openFile(mapName);
+	if (openFile.is_open())
+	{
+		while (!openFile.eof())
+		{
+			std::string currentChar;
+			openFile >> currentChar;
+
+			*txt += currentChar;
+		}
+		openFile.close();
+	}
+}
+
+void parser(std::string* txt, Map* map)
+{
+	Document doc;
+	doc.Parse(txt->c_str());
+	StringBuffer buffer;
+	Writer<StringBuffer> writer(buffer);
+	doc.Accept(writer);
+	//std::cout << buffer.GetString() << std::endl;
+}
+
+void createMap(Map* map, std::string mapName)
+{
+	std::string txt;
+	getFile(&txt, mapName);
+	parser(&txt, map);
+}
 
 int main()
 {
@@ -238,6 +279,10 @@ int main()
 	double duration;
 	double sleepTime;
 
+	Map map;
+
+	createMap(&map, "test.json");
+
 	while (true)
 	{
 		start = std::clock();
@@ -248,7 +293,7 @@ int main()
 		end = std::clock();
 
 		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
-		std::cout << duration << std::endl;
+		//std::cout << duration << std::endl;
 		sleepTime = 1000 / fpsCap - duration;
 		if (sleepTime > 0)
 		{
