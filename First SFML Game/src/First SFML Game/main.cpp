@@ -4,11 +4,7 @@
 #include <string>
 #include <windows.h>
 #include "gameObjects.h"
-
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
-using namespace rapidjson;
+#include "mapManager.h"
 
 extern TextureCollection textures;
 
@@ -232,43 +228,6 @@ void Render::update(World& world)
 	window.display();
 }
 
-class Map
-{
-};
-
-void getFile(std::string* txt, std::string mapName)
-{
-	std::ifstream openFile(mapName);
-	if (openFile.is_open())
-	{
-		while (!openFile.eof())
-		{
-			std::string currentChar;
-			openFile >> currentChar;
-
-			*txt += currentChar;
-		}
-		openFile.close();
-	}
-}
-
-void parser(std::string* txt, Map* map)
-{
-	Document doc;
-	doc.Parse(txt->c_str());
-	StringBuffer buffer;
-	Writer<StringBuffer> writer(buffer);
-	doc.Accept(writer);
-	//std::cout << buffer.GetString() << std::endl;
-}
-
-void createMap(Map* map, std::string mapName)
-{
-	std::string txt;
-	getFile(&txt, mapName);
-	parser(&txt, map);
-}
-
 int main()
 {
 	World world;
@@ -281,7 +240,7 @@ int main()
 
 	Map map;
 
-	createMap(&map, "test.json");
+	map.createMap(&map, "test.json");
 
 	while (true)
 	{

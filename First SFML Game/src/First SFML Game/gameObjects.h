@@ -1,6 +1,3 @@
-#ifndef __TEXTURECOLLECTOR_H__
-#define __TEXTURECOLLECTOR_H__
-
 #include "textureCollector.h"
 
 extern TextureCollection textures;
@@ -43,5 +40,3 @@ class building{};
 
 
 class Environement{};
-
-#endif
