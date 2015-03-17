@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <windows.h>
+#include <unordered_map>
 #include "gameObjects.h"
 #include "mapManager.h"
 
@@ -13,8 +14,10 @@ int fpsCap = 60;
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
 Wrath enemy;
+TileSet tileSet;
+Map map;
 
-sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+sf::RenderWindow window(sf::VideoMode(1280, 720), "My window");
 
 sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")
 {
@@ -136,6 +139,23 @@ public:
 	void update(World& world);
 };
 
+
+void drawMap(sf::RenderWindow* window)
+{
+	sf::Sprite tile;
+	int itr = 0;
+	for (int y = 0; y < map.height; y++)
+	{
+		for (int x = 0; x < map.width; x++)
+		{
+			tile.setTexture(*textures.grass);
+			tile.setPosition(sf::Vector2f(x * tileSet.tileWidth, y * tileSet.tileHeight));
+			window->draw(tile);
+			itr++;
+		}
+	}
+}
+
 //INIT
 Render::Render()
 {
@@ -157,68 +177,7 @@ void Render::update(World& world)
 	window.clear(sf::Color::Black);
 	
 	// draw everything here...
-	std::ifstream openFile("map1.txt");
-	if (openFile.is_open())
-	{
-		int layer = 0;
-		while (!openFile.eof())
-		{
-			std::string id;
-			openFile >> id;
-
-			if (layer == 1)
-			{
-				if (id == "1")
-				{
-					sf::Sprite* tile = drawSprite(textures.grass, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
-					window.draw(*tile);
-					delete tile;
-				}
-
-				if (id == "2")
-				{
-					sf::Sprite* tile = drawSprite(textures.rock, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
-					window.draw(*tile);
-					delete tile;
-				}
-			}
-
-			if (layer == 2)
-			{
-				if (id == "1")
-				{
-					sf::Sprite* tile = drawSprite(textures.tree, sf::Vector2f(mapLoc.x * 32, mapLoc.y * 32));
-					window.draw(*tile);
-					delete tile;
-				}
-			}
-
-			if (openFile.peek() == '\n')
-			{
-				mapLoc.y++;
-				mapLoc.x = 0;
-			}
-			else
-			{
-				mapLoc.x++;
-			}
-
-			if (id == "L1")
-			{
-				layer = 1;
-				mapLoc.x = 0;
-				mapLoc.y = 0;
-			}
-
-			if (id == "L2")
-			{
-				layer = 2;
-				mapLoc.x = 0;
-				mapLoc.y = 0;
-			}
-		}
-		mapLoc = sf::Vector2i(0, 0);
-	}
+	drawMap(&window);
 
 	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.location, enemy.rotation, enemy.color, "center");
 	window.draw(*sprite);
@@ -238,8 +197,6 @@ int main()
 	double duration;
 	double sleepTime;
 
-	Map map;
-
 	map.createMap(&map, "test.json");
 
 	while (true)
@@ -252,7 +209,7 @@ int main()
 		end = std::clock();
 
 		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
-		//std::cout << duration << std::endl;
+		std::cout << duration << std::endl;
 		sleepTime = 1000 / fpsCap - duration;
 		if (sleepTime > 0)
 		{

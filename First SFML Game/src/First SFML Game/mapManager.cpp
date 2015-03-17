@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <vector>
 #include <array>
 #include "mapManager.h"
@@ -34,20 +33,24 @@ void parser(std::string* txt, Map* map)
 	Writer<StringBuffer> writer(buffer);
 	doc.Accept(writer);
 
-	assert(doc["layers"][0]["data"].IsArray());
-
 	const Value& mapArray = doc["layers"][0]["data"];
-	assert(mapArray.IsArray());
+	map->height = doc["layers"][0]["height"].GetInt();
+	map->width = doc["layers"][0]["width"].GetInt();
 
-	for (int i = 0; i < mapArray.Size(); i++)
+	std::cout << map->height << std::endl;
+	std::cout << map->width << std::endl;
+
+	int itr = 0;
+	for (int i = 0; i < map->height; i++)
 	{
-		std::cout << doc["layers"][0]["data"][i].GetInt() << std::endl;
-		//std::cout << doc["layers"][0]["data"][i].GetInt() << std::endl;
+		std::vector<int> row;
+		for (int j = 0; j < map->width; j++)
+		{
+			row.push_back(mapArray[itr].GetInt());
+			itr++;
+		}
+		map->data.push_back(row);
 	}
-
-	//std::array<int, 6> jsonData = ;
-	//map->data = std::vector<int>(std::begin(jsonData), std::end(jsonData));
-	//std::cout << buffer.GetString() << std::endl;
 }
 
 void Map::createMap(Map* map, std::string mapName)
