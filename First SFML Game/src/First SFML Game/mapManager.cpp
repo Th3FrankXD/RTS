@@ -2,12 +2,26 @@
 #include <fstream>
 #include <vector>
 #include <array>
+#include <SFML/Graphics.hpp>
 #include "mapManager.h"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
+#include "textureCollector.h"
+
+extern TextureCollection textures;
 
 using namespace rapidjson;
+
+Map::Map()
+{
+
+}
+
+Map::~Map()
+{
+	delete this->tileSet;
+}
 
 void getFile(std::string* txt, std::string mapName)
 {
@@ -56,9 +70,47 @@ void parser(std::string* txt, Map* map)
 	}
 }
 
+TileSet::TileSet()
+{
+
+}
+
+TileSet::~TileSet()
+{
+	//delete textures from vector
+}
+
+void TileSet::setTextureData()
+{
+	sf::Image tileMapImage;
+	tileMapImage.loadFromFile("tiles.png");
+
+	sf::Texture* texture = new sf::Texture();
+	this->data.push_back(texture);
+
+	int height = this->imageHeight / this->tileHeight;
+	int width = this->imageWidth / this->tileWidth;
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			sf::Texture* texture = new sf::Texture;
+			texture->loadFromImage(tileMapImage, sf::IntRect(x * this->tileWidth, y * this->tileHeight, this->tileWidth, this->tileHeight));
+			this->data.push_back(texture);
+		}
+	}
+}
+
+sf::Texture* Map::getTexture(int x, int y)
+{
+	int index = this->data[y][x];
+	return this->tileSet->data[index];
+}
+
 void Map::createMap(Map* map, std::string mapName)
 {
 	std::string txt;
 	getFile(&txt, mapName);
 	parser(&txt, map);
+	this->tileSet->setTextureData();
 }

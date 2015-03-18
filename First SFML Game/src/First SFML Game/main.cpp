@@ -13,9 +13,8 @@ int fpsCap = 60;
 
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
-Wrath enemy;
-TileSet tileSet;
-Map map;
+Wrath* enemy = new Wrath;
+Map* map = new Map;
 
 sf::RenderWindow window(sf::VideoMode(1280, 720), "My window");
 
@@ -53,48 +52,48 @@ void rotateToVect(sf::Vector2i target)
 {
 	const float PI = 3.14159265;
 
-	float dx = enemy.location.x - target.x;
-	float dy = enemy.location.y - target.y;
+	float dx = enemy->location.x - target.x;
+	float dy = enemy->location.y - target.y;
 
 	float rotation = (atan2(dy, dx)) * 180 / PI;
-	if (target.x != enemy.location.x && target.y != enemy.location.y)
+	if (target.x != enemy->location.x && target.y != enemy->location.y)
 	{
-		enemy.rotation = rotation;
+		enemy->rotation = rotation;
 	}
 }
 
 void moveToTarget()
 {
-	if (abs(enemy.location.x - enemy.target.x) > enemy.speed)
+	if (abs(enemy->location.x - enemy->target.x) > enemy->speed)
 	{
-		if (enemy.location.x < enemy.target.x)
+		if (enemy->location.x < enemy->target.x)
 		{
-			enemy.location.x += enemy.speed;
+			enemy->location.x += enemy->speed;
 		}
 		else
 		{
-			enemy.location.x -= enemy.speed;
+			enemy->location.x -= enemy->speed;
 		}
 	}
 	else
 	{
-		enemy.location.x = enemy.target.x;
+		enemy->location.x = enemy->target.x;
 	}
 
-	if (abs(enemy.location.y - enemy.target.y) > enemy.speed)
+	if (abs(enemy->location.y - enemy->target.y) > enemy->speed)
 	{
-		if (enemy.location.y < enemy.target.y)
+		if (enemy->location.y < enemy->target.y)
 		{
-			enemy.location.y += enemy.speed;
+			enemy->location.y += enemy->speed;
 		}
 		else
 		{
-			enemy.location.y -= enemy.speed;
+			enemy->location.y -= enemy->speed;
 		}
 	}
 	else
 	{
-		enemy.location.y = enemy.target.y;
+		enemy->location.y = enemy->target.y;
 	}
 }
 
@@ -102,23 +101,23 @@ void checkMouseEvents()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		if (abs(sf::Mouse::getPosition(window).x - enemy.location.x) < 30 &&
-			abs(sf::Mouse::getPosition(window).y - enemy.location.y) < 30)
+		if (abs(sf::Mouse::getPosition(window).x - enemy->location.x) < 30 &&
+			abs(sf::Mouse::getPosition(window).y - enemy->location.y) < 30)
 		{
-			enemy.selected = true;
-			enemy.color = sf::Color(255, 255, 100);
+			enemy->selected = true;
+			enemy->color = sf::Color(255, 255, 100);
 		}
 		else
 		{
-			enemy.selected = false;
-			enemy.color = sf::Color(255, 255, 255);
+			enemy->selected = false;
+			enemy->color = sf::Color(255, 255, 255);
 		}
 	}
-	if (enemy.selected)
+	if (enemy->selected)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 		{
-			enemy.target = sf::Mouse::getPosition(window);
+			enemy->target = sf::Mouse::getPosition(window);
 		}
 	}
 }
@@ -127,7 +126,7 @@ void checkMouseEvents()
 void World::update()
 {
 	checkMouseEvents();
-	rotateToVect(enemy.target);
+	rotateToVect(enemy->target);
 	moveToTarget();
 }
 
@@ -144,13 +143,18 @@ void drawMap(sf::RenderWindow* window)
 {
 	sf::Sprite tile;
 	int itr = 0;
-	for (int y = 0; y < map.height; y++)
+	int location;
+	for (int y = 0; y < map->height; y++)
 	{
-		for (int x = 0; x < map.width; x++)
+		for (int x = 0; x < map->width; x++)
 		{
-			tile.setTexture(*textures.grass);
-			tile.setPosition(sf::Vector2f(x * tileSet.tileWidth, y * tileSet.tileHeight));
-			window->draw(tile);
+			location = map->data[y][x];
+			if (location != 0)
+			{
+				tile.setTexture(*map->tileSet->data[location]);
+				tile.setPosition(sf::Vector2f(x * map->tileSet->tileWidth, y * map->tileSet->tileHeight));
+				window->draw(tile);
+			}
 			itr++;
 		}
 	}
@@ -179,7 +183,7 @@ void Render::update(World& world)
 	// draw everything here...
 	drawMap(&window);
 
-	sf::Sprite* sprite = drawSprite(enemy.texture, enemy.location, enemy.rotation, enemy.color, "center");
+	sf::Sprite* sprite = drawSprite(enemy->texture, enemy->location, enemy->rotation, enemy->color, "center");
 	window.draw(*sprite);
 	delete sprite;
 
@@ -191,13 +195,13 @@ int main()
 {
 	World world;
 	Render renderer;
-	
+
 	std::clock_t start;
 	std::clock_t end;
 	double duration;
 	double sleepTime;
 
-	map.createMap(&map, "test.json");
+	map->createMap(map, "test.json");
 
 	while (true)
 	{
