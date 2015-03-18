@@ -37,8 +37,11 @@ void parser(std::string* txt, Map* map)
 	map->height = doc["layers"][0]["height"].GetInt();
 	map->width = doc["layers"][0]["width"].GetInt();
 
-	std::cout << map->height << std::endl;
-	std::cout << map->width << std::endl;
+	map->tileSet->image = doc["tilesets"][0]["image"].GetString();
+	map->tileSet->tileHeight = doc["tilesets"][0]["tileheight"].GetInt();
+	map->tileSet->tileWidth = doc["tilesets"][0]["tilewidth"].GetInt();
+	map->tileSet->imageHeight = doc["tilesets"][0]["imageheight"].GetInt();
+	map->tileSet->imageWidth = doc["tilesets"][0]["imagewidth"].GetInt();
 
 	int itr = 0;
 	for (int i = 0; i < map->height; i++)
