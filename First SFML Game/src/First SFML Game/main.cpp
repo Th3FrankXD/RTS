@@ -11,6 +11,7 @@
 extern TextureCollection textures;
 
 int fpsCap = 60;
+int duration;
 bool minimap = false;
 
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
@@ -18,7 +19,7 @@ sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 Wrath* enemy = new Wrath;
 Map* map = new Map;
 
-sf::RenderWindow window(sf::VideoMode(1280, 720), "My window");
+sf::RenderWindow window(sf::VideoMode(1280, 720), "duration: " + duration);
 sf::View view;
 
 sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")
@@ -27,6 +28,7 @@ sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float 
 
 	sprite->setTexture(*texture);
 	sprite->setColor(color);
+	sprite->setScale(enemy->scale);
 
 	if (origin == "center")
 	{
@@ -58,7 +60,7 @@ void rotateToVect(sf::Vector2f target)
 	float dx = enemy->location.x - target.x;
 	float dy = enemy->location.y - target.y;
 
-	float rotation = (atan2(dy, dx)) * 180 / PI;
+	float rotation = (atan2(dy, dx)) * 180 / PI - 90;
 	if (target.x != enemy->location.x && target.y != enemy->location.y)
 	{
 		enemy->rotation = rotation;
@@ -118,19 +120,19 @@ void checkMouseEvents()
 	sf::Vector2f windowSize = sf::Vector2f(window.getSize().x, window.getSize().y);
 	float zoomLevel = abs(viewSize.x - viewSize.y) / 100;
 
-	if (sf::Mouse::getPosition(window).x <= 0)
+	if (sf::Mouse::getPosition(window).x <= 0 && view.getCenter().x - viewSize. x / 2 > 0)
 	{
 		view.move(-(2 * zoomLevel), 0);
 	}
-	if (sf::Mouse::getPosition(window).x >= windowSize.x)
+	if (sf::Mouse::getPosition(window).x >= windowSize.x && view.getCenter().x + viewSize.x / 2 < map->width * map->tileSet->tileWidth)
 	{
 		view.move((2 * zoomLevel), 0);
 	}
-	if (sf::Mouse::getPosition(window).y <= 0)
+	if (sf::Mouse::getPosition(window).y <= 0 && view.getCenter().y - viewSize.y / 2 > 0)
 	{
 		view.move(0, -(2 * zoomLevel));
 	}
-	if (sf::Mouse::getPosition(window).y >= windowSize.y)
+	if (sf::Mouse::getPosition(window).y >= windowSize.y && view.getCenter().y + viewSize.y / 2 < map->height * map->tileSet->tileHeight)
 	{
 		view.move(0, (2 * zoomLevel));
 	}
@@ -258,10 +260,14 @@ int main()
 
 	std::clock_t start;
 	std::clock_t end;
-	double duration;
 	double sleepTime;
 
-	map->createMap(map, "test.json");
+	map->createMap(map, "test1.json");
+
+	enemy->scale.x = map->tileSet->tileWidth / float(32);
+	enemy->scale.y = map->tileSet->tileHeight / float(32);
+
+	enemy->speed = enemy->speed * enemy->scale.x;
 
 	while (true)
 	{
