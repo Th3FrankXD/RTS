@@ -18,7 +18,7 @@ public:
 	float rotation = 0.0;
 	float speed = 3.0;
 	bool selected;
-	sf::Vector2i target;
+	sf::Vector2f target;
 };
 
 
@@ -32,7 +32,7 @@ public:
 	float rotation = 0.0;
 	float speed = 3.0;
 	bool selected;
-	sf::Vector2i target;
+	sf::Vector2f target;
 };
 
 

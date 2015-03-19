@@ -51,7 +51,7 @@ World::World()
 {
 }
 
-void rotateToVect(sf::Vector2i target)
+void rotateToVect(sf::Vector2f target)
 {
 	const float PI = 3.14159265;
 
@@ -100,29 +100,46 @@ void moveToTarget()
 	}
 }
 
+void zoomView(int mouseWheel)
+{
+	if (mouseWheel < 0)
+	{
+		view.zoom(1.1);
+	}
+	if (mouseWheel > 0)
+	{
+		view.zoom(0.9);
+	}
+}
+
 void checkMouseEvents()
 {
+	sf::Vector2f viewSize = view.getSize();
+	sf::Vector2f windowSize = sf::Vector2f(window.getSize().x, window.getSize().y);
+	float zoomLevel = abs(viewSize.x - viewSize.y) / 100;
+
 	if (sf::Mouse::getPosition(window).x <= 0)
 	{
-		view.move(-10, 0);
+		view.move(-(2 * zoomLevel), 0);
 	}
-	if (sf::Mouse::getPosition(window).x >= 1280)
+	if (sf::Mouse::getPosition(window).x >= windowSize.x)
 	{
-		view.move(10, 0);
+		view.move((2 * zoomLevel), 0);
 	}
 	if (sf::Mouse::getPosition(window).y <= 0)
 	{
-		view.move(0, -10);
+		view.move(0, -(2 * zoomLevel));
 	}
-	if (sf::Mouse::getPosition(window).y >= 720)
+	if (sf::Mouse::getPosition(window).y >= windowSize.y)
 	{
-		view.move(0, 10);
+		view.move(0, (2 * zoomLevel));
 	}
 
+	sf::Vector2f mouseCoords = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		if (abs(sf::Mouse::getPosition(window).x - enemy->location.x) < 30 &&
-			abs(sf::Mouse::getPosition(window).y - enemy->location.y) < 30)
+		if (abs(mouseCoords.x - enemy->location.x) < 30 &&
+			abs(mouseCoords.y - enemy->location.y) < 30)
 		{
 			enemy->selected = true;
 			enemy->color = sf::Color(255, 255, 100);
@@ -137,7 +154,7 @@ void checkMouseEvents()
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 		{
-			enemy->target = sf::Mouse::getPosition(window);
+			enemy->target = mouseCoords;
 		}
 	}
 }
@@ -209,6 +226,13 @@ void Render::update(World& world)
 		// "close requested" event: we close the window
 		if (event.type == sf::Event::Closed)
 			window.close();
+		switch (event.type)
+		{
+		case sf::Event::Closed:
+			window.close();
+		case sf::Event::MouseWheelMoved:
+			zoomView(event.mouseWheel.delta);
+		}
 	}
 	// clear the window with black color
 	window.clear(sf::Color::Black);
@@ -229,8 +253,8 @@ int main()
 	World world;
 	Render renderer;
 
-	view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
-	view.setSize(sf::Vector2f(1280, 720));
+	view.setViewport(sf::FloatRect(0, 0, 1.0f, 0.75f));
+	view.setSize(sf::Vector2f(1280, 720 * 0.75));
 
 	std::clock_t start;
 	std::clock_t end;
@@ -250,7 +274,7 @@ int main()
 		end = std::clock();
 
 		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
-		std::cout << duration << std::endl;
+		//std::cout << duration << std::endl;
 		sleepTime = 1000 / fpsCap - duration;
 		if (sleepTime > 0)
 		{
