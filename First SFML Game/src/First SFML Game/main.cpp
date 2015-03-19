@@ -10,17 +10,22 @@
 
 extern TextureCollection textures;
 
+float resX = 1280;
+float resY = 720;
+
 int fpsCap = 60;
-int duration;
-bool minimap = false;
+
+bool captureMap = true;
+sf::Texture* miniMapTex = new sf::Texture;
 
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
 Wrath* enemy = new Wrath;
 Map* map = new Map;
 
-sf::RenderWindow window(sf::VideoMode(1280, 720), "duration: " + duration);
+sf::RenderWindow window(sf::VideoMode(resX, resY), "my rts");
 sf::View view;
+sf::View miniMap;
 
 sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")
 {
@@ -178,7 +183,7 @@ public:
 };
 
 
-void drawMap(sf::RenderWindow* window)
+void drawMap(sf::RenderWindow* window, sf::View view)
 {
 	sf::Sprite tile;
 	int itr = 0;
@@ -212,9 +217,47 @@ void drawMap(sf::RenderWindow* window)
 	}
 }
 
+void drawWholeMap(sf::RenderWindow* window)
+{
+	sf::Sprite tile;
+	int itr = 0;
+	int location;
+
+	for (int y = 0; y < map->height; y++)
+	{
+		if (y < 0)
+		{
+			y = 0;
+		}
+		for (int x = 0; x < map->width; x++)
+		{
+			if (x < 0)
+			{
+				x = 0;
+			}
+			location = map->data[y][x];
+			if (location != 0)
+			{
+				tile.setTexture(*map->tileSet->data[location]);
+				tile.setPosition(sf::Vector2f(x * map->tileSet->tileWidth, y * map->tileSet->tileHeight));
+				window->draw(tile);
+			}
+			itr++;
+		}
+	}
+}
+
 //INIT
 Render::Render()
 {
+}
+
+void drawMiniMap(sf::RenderWindow* window)
+{
+	sf::Sprite miniMapSprite;
+	miniMapSprite.setTexture(*miniMapTex);
+	miniMapSprite.setPosition(sf::Vector2f(0, 0));
+	window->draw(miniMapSprite);
 }
 
 //RenderLoop
@@ -240,7 +283,21 @@ void Render::update(World& world)
 	window.clear(sf::Color::Black);
 
 	// draw everything here...
-	drawMap(&window);
+	window.setView(miniMap);
+	if (captureMap == true)
+	{
+		drawMap(&window, miniMap);
+		sf::Image miniMapBG = window.capture();
+		//miniMapTex->loadFromImage(miniMapBG, sf::IntRect(1000, 0, 200, 200));
+		miniMapTex->loadFromImage(miniMapBG, sf::IntRect(miniMapBG.getSize().x * 0.8, 0, miniMapBG.getSize().x / 5, miniMapBG.getSize().y / 5));
+		//miniMapBG.saveToFile("test.jpg");
+		miniMap.setSize(miniMapBG.getSize().x / 5, miniMapBG.getSize().y / 5);
+		miniMap.setCenter(sf::Vector2f(miniMap.getSize().x / 2, miniMap.getSize().y / 2));
+		captureMap = false;
+	}
+	drawMiniMap(&window);
+	window.setView(view);
+	drawMap(&window, view);
 
 	sf::Sprite* sprite = drawSprite(enemy->texture, enemy->location, enemy->rotation, enemy->color, "center");
 	window.draw(*sprite);
@@ -250,19 +307,52 @@ void Render::update(World& world)
 	window.display();
 }
 
+sf::Vector2f getMiniMapSize()
+{
+	sf::Vector2f mapPixelSize = sf::Vector2f(map->width * map->tileSet->tileWidth, map->height * map->tileSet->tileHeight);
+	sf::Vector2f miniMapSize = mapPixelSize;
+	bool xIncrease = false;
+	float miniMapRatio = float(mapPixelSize.x) / float(mapPixelSize.y);
+	if (miniMapRatio < 1)
+	{
+		xIncrease = true;
+	}
+
+	if (xIncrease = true)
+	{
+		for (int i = 0; miniMapRatio < 1; i++)
+		{
+			miniMapSize.x++;
+			miniMapRatio = float(miniMapSize.x) / float(miniMapSize.y);
+		}
+	}
+	else
+	{
+		for (int i = 0; miniMapRatio > 1; i++)
+		{
+			miniMapSize.y++;
+			miniMapRatio = float(miniMapSize.x) / float(miniMapSize.y);
+		}
+	}
+	return miniMapSize;
+}
+
 int main()
 {
 	World world;
 	Render renderer;
 
-	view.setViewport(sf::FloatRect(0, 0, 1.0f, 0.75f));
-	view.setSize(sf::Vector2f(1280, 720 * 0.75));
+	map->createMap(map, "test.json");
+	view.setViewport(sf::FloatRect(0, 0, 0.8f, 1.0f));
+	view.setSize(sf::Vector2f(resX * 0.8, resY));
+	miniMap.setViewport(sf::FloatRect(0.8f, 0.0f, 0.2f, resX / 5 / resY));
+	miniMap.setSize(getMiniMapSize());
+	miniMap.setCenter(sf::Vector2f(map->width * map->tileSet->tileWidth / 2, map->height * map->tileSet->tileHeight / 2));
 
 	std::clock_t start;
 	std::clock_t end;
 	double sleepTime;
-
-	map->createMap(map, "test1.json");
+	int duration;
 
 	enemy->scale.x = map->tileSet->tileWidth / float(32);
 	enemy->scale.y = map->tileSet->tileHeight / float(32);
@@ -280,7 +370,7 @@ int main()
 		end = std::clock();
 
 		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
-		//std::cout << duration << std::endl;
+		std::cout << duration << std::endl;
 		sleepTime = 1000 / fpsCap - duration;
 		if (sleepTime > 0)
 		{

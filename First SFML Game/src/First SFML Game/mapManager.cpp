@@ -77,7 +77,7 @@ TileSet::TileSet()
 
 TileSet::~TileSet()
 {
-	//delete textures from vector
+
 }
 
 void TileSet::setTextureData()
