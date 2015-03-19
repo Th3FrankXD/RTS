@@ -13,10 +13,12 @@
   <ItemGroup>
     <ClCompile Include="gameObjects.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mapManager.cpp" />
     <ClCompile Include="textureCollector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObjects.h" />
+    <ClInclude Include="mapManager.h" />
     <ClInclude Include="textureCollector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

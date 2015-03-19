@@ -24,13 +24,19 @@
     <ClCompile Include="textureCollector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mapManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObjects.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mapManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="textureCollector.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

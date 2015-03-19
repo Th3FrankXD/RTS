@@ -83,7 +83,7 @@ TileSet::~TileSet()
 void TileSet::setTextureData()
 {
 	sf::Image tileMapImage;
-	tileMapImage.loadFromFile("tiles.png");
+	tileMapImage.loadFromFile(this->image);
 
 	sf::Texture* texture = new sf::Texture();
 	this->data.push_back(texture);

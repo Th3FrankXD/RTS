@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
 #include <windows.h>
 #include <unordered_map>
 #include "gameObjects.h"
@@ -10,6 +11,7 @@
 extern TextureCollection textures;
 
 int fpsCap = 60;
+bool minimap = false;
 
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
@@ -17,6 +19,7 @@ Wrath* enemy = new Wrath;
 Map* map = new Map;
 
 sf::RenderWindow window(sf::VideoMode(1280, 720), "My window");
+sf::View view;
 
 sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")
 {
@@ -99,6 +102,23 @@ void moveToTarget()
 
 void checkMouseEvents()
 {
+	if (sf::Mouse::getPosition(window).x <= 0)
+	{
+		view.move(-10, 0);
+	}
+	if (sf::Mouse::getPosition(window).x >= 1280)
+	{
+		view.move(10, 0);
+	}
+	if (sf::Mouse::getPosition(window).y <= 0)
+	{
+		view.move(0, -10);
+	}
+	if (sf::Mouse::getPosition(window).y >= 720)
+	{
+		view.move(0, 10);
+	}
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		if (abs(sf::Mouse::getPosition(window).x - enemy->location.x) < 30 &&
@@ -144,10 +164,23 @@ void drawMap(sf::RenderWindow* window)
 	sf::Sprite tile;
 	int itr = 0;
 	int location;
-	for (int y = 0; y < map->height; y++)
+	int maxWidth = nearbyint((view.getCenter().x + view.getSize().x / 2) / map->tileSet->tileWidth) + 1;
+	int minWidth = nearbyint((view.getCenter().x - view.getSize().x / 2) / map->tileSet->tileWidth) - 1;
+	int maxHeight = nearbyint((view.getCenter().y + view.getSize().y / 2) / map->tileSet->tileHeight) + 1;
+	int minHeight = nearbyint((view.getCenter().y - view.getSize().y / 2) / map->tileSet->tileHeight) - 1;
+
+	for (int y = minHeight; y < maxHeight && y < map->height; y++)
 	{
-		for (int x = 0; x < map->width; x++)
+		if (y < 0)
 		{
+			y = 0;
+		}
+		for (int x = minWidth; x < maxWidth && x < map->width; x++)
+		{
+			if (x < 0)
+			{
+				x = 0;
+			}
 			location = map->data[y][x];
 			if (location != 0)
 			{
@@ -179,7 +212,7 @@ void Render::update(World& world)
 	}
 	// clear the window with black color
 	window.clear(sf::Color::Black);
-	
+
 	// draw everything here...
 	drawMap(&window);
 
@@ -196,6 +229,9 @@ int main()
 	World world;
 	Render renderer;
 
+	view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+	view.setSize(sf::Vector2f(1280, 720));
+
 	std::clock_t start;
 	std::clock_t end;
 	double duration;
@@ -209,6 +245,7 @@ int main()
 
 		world.update();
 		renderer.update(world);
+		window.setView(view);
 
 		end = std::clock();
 
