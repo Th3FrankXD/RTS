@@ -16,6 +16,9 @@ float resY = 720;
 int fpsCap = 60;
 
 bool captureMap = true;
+int miniMapXOffSet;
+int miniMapYOffSet;
+
 sf::Texture* miniMapTex = new sf::Texture;
 
 sf::Vector2i mapLoc = sf::Vector2i(0, 0);
@@ -125,7 +128,7 @@ void checkMouseEvents()
 	sf::Vector2f windowSize = sf::Vector2f(window.getSize().x, window.getSize().y);
 	float zoomLevel = abs(viewSize.x - viewSize.y) / 100;
 
-	if (sf::Mouse::getPosition(window).x <= 0 && view.getCenter().x - viewSize. x / 2 > 0)
+	if (sf::Mouse::getPosition(window).x <= 0 && view.getCenter().x - viewSize.x / 2 > 0)
 	{
 		view.move(-(2 * zoomLevel), 0);
 	}
@@ -288,14 +291,27 @@ void Render::update(World& world)
 	{
 		drawMap(&window, miniMap);
 		sf::Image miniMapBG = window.capture();
-		//miniMapTex->loadFromImage(miniMapBG, sf::IntRect(1000, 0, 200, 200));
-		miniMapTex->loadFromImage(miniMapBG, sf::IntRect(miniMapBG.getSize().x * 0.8, 0, miniMapBG.getSize().x / 5, miniMapBG.getSize().y / 5));
-		//miniMapBG.saveToFile("test.jpg");
-		miniMap.setSize(miniMapBG.getSize().x / 5, miniMapBG.getSize().y / 5);
+		//miniMapBG.saveToFile("minimapcheck.jpg");
+		miniMapTex->loadFromImage(miniMapBG, sf::IntRect(miniMapBG.getSize().x * 0.8, 0, miniMapBG.getSize().x * 0.2, miniMapBG.getSize().y * (resX / 5 / resY)));
+		miniMap.setSize(miniMapBG.getSize().x * 0.2, miniMapBG.getSize().y * (resX / 5 / resY));
 		miniMap.setCenter(sf::Vector2f(miniMap.getSize().x / 2, miniMap.getSize().y / 2));
+		
+		sf::RectangleShape rect;
+		rect.setSize(sf::Vector2f(miniMapBG.getSize().x, miniMapBG.getSize().y));
+		window.draw(rect);
+
 		captureMap = false;
 	}
 	drawMiniMap(&window);
+
+	sf::RectangleShape rect;
+	rect.setSize(sf::Vector2f(10, 10));
+	sf::Vector2f currentLoc = sf::Vector2f(128, 128);
+	float rectXPos = resX * 0.2 * (miniMapXOffSet / (map->width * map->tileSet->tileWidth)) / float(2);
+	float rectYPos = resY * (resX / 5 / resY) * (miniMapYOffSet / (map->height * map->tileSet->tileHeight)) / float(2);
+	rect.setPosition(sf::Vector2f(currentLoc.x + rectXPos, currentLoc.y + rectYPos));
+	window.draw(rect);
+
 	window.setView(view);
 	drawMap(&window, view);
 
@@ -318,12 +334,13 @@ sf::Vector2f getMiniMapSize()
 		xIncrease = true;
 	}
 
-	if (xIncrease = true)
+	if (xIncrease == true)
 	{
 		for (int i = 0; miniMapRatio < 1; i++)
 		{
 			miniMapSize.x++;
 			miniMapRatio = float(miniMapSize.x) / float(miniMapSize.y);
+			miniMapXOffSet++;
 		}
 	}
 	else
@@ -332,6 +349,7 @@ sf::Vector2f getMiniMapSize()
 		{
 			miniMapSize.y++;
 			miniMapRatio = float(miniMapSize.x) / float(miniMapSize.y);
+			miniMapYOffSet++;
 		}
 	}
 	return miniMapSize;
