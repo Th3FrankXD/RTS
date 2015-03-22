@@ -220,36 +220,6 @@ void drawMap(sf::RenderWindow* window, sf::View view)
 	}
 }
 
-void drawWholeMap(sf::RenderWindow* window)
-{
-	sf::Sprite tile;
-	int itr = 0;
-	int location;
-
-	for (int y = 0; y < map->height; y++)
-	{
-		if (y < 0)
-		{
-			y = 0;
-		}
-		for (int x = 0; x < map->width; x++)
-		{
-			if (x < 0)
-			{
-				x = 0;
-			}
-			location = map->data[y][x];
-			if (location != 0)
-			{
-				tile.setTexture(*map->tileSet->data[location]);
-				tile.setPosition(sf::Vector2f(x * map->tileSet->tileWidth, y * map->tileSet->tileHeight));
-				window->draw(tile);
-			}
-			itr++;
-		}
-	}
-}
-
 //INIT
 Render::Render()
 {
