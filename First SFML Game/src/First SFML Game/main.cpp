@@ -4,7 +4,6 @@
 #include <string>
 #include <cmath>
 #include <windows.h>
-#include <unordered_map>
 #include "gameObjects.h"
 #include "mapManager.h"
 
@@ -13,24 +12,23 @@ extern TextureCollection textures;
 float resX = 1280;
 float resY = 720;
 
-int fpsCap = 60;
+bool captureMap = true;//
+int miniMapXOffSet;//
+int miniMapYOffSet;//
 
-bool captureMap = true;
-int miniMapXOffSet;
-int miniMapYOffSet;
+sf::Texture* miniMapTex = new sf::Texture;//
 
-sf::Texture* miniMapTex = new sf::Texture;
-
-sf::Vector2i mapLoc = sf::Vector2i(0, 0);
+//sf::Vector2i mapLoc = sf::Vector2i(0, 0);
 
 Wrath* enemy = new Wrath;
 Map* map = new Map;
 
-sf::RenderWindow window(sf::VideoMode(resX, resY), "my rts");
-sf::View view;
-sf::View miniMap;
+sf::RenderWindow window(sf::VideoMode(resX, resY), "my rts");//
 
-sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")
+sf::View view;//
+sf::View miniMap;//
+
+sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float rotation = 0, sf::Color color = sf::Color(255, 255, 255), std::string origin = "")//
 {
 	sf::Sprite* sprite = new sf::Sprite;
 
@@ -49,7 +47,7 @@ sf::Sprite* drawSprite(const sf::Texture* texture, sf::Vector2f location, float 
 	return sprite;
 }
 
-class World
+class World//
 {
 public:
 	World();
@@ -57,11 +55,11 @@ public:
 };
 
 //INIT
-World::World()
+World::World()//
 {
 }
 
-void rotateToVect(sf::Vector2f target)
+void rotateToVect(sf::Vector2f target)//
 {
 	const float PI = 3.14159265;
 
@@ -75,7 +73,7 @@ void rotateToVect(sf::Vector2f target)
 	}
 }
 
-void moveToTarget()
+void moveToTarget()//
 {
 	if (abs(enemy->location.x - enemy->target.x) > enemy->speed)
 	{
@@ -110,7 +108,7 @@ void moveToTarget()
 	}
 }
 
-void zoomView(int mouseWheel)
+void zoomView(int mouseWheel)//
 {
 	if (mouseWheel < 0)
 	{
@@ -122,7 +120,7 @@ void zoomView(int mouseWheel)
 	}
 }
 
-void checkMouseEvents()
+void checkMouseEvents()//
 {
 	sf::Vector2f viewSize = view.getSize();
 	sf::Vector2f windowSize = sf::Vector2f(window.getSize().x, window.getSize().y);
@@ -170,7 +168,7 @@ void checkMouseEvents()
 }
 
 //WorldLoop
-void World::update()
+void World::update()//
 {
 	checkMouseEvents();
 	rotateToVect(enemy->target);
@@ -178,7 +176,7 @@ void World::update()
 }
 
 
-class Render
+class Render//
 {
 public:
 	Render();
@@ -186,7 +184,7 @@ public:
 };
 
 
-void drawMap(sf::RenderWindow* window, sf::View view)
+void drawMap(sf::RenderWindow* window, sf::View view)//
 {
 	sf::Sprite tile;
 	int itr = 0;
@@ -221,11 +219,11 @@ void drawMap(sf::RenderWindow* window, sf::View view)
 }
 
 //INIT
-Render::Render()
+Render::Render()//
 {
 }
 
-void drawMiniMap(sf::RenderWindow* window)
+void drawMiniMap(sf::RenderWindow* window)//
 {
 	sf::Sprite miniMapSprite;
 	miniMapSprite.setTexture(*miniMapTex);
@@ -234,7 +232,7 @@ void drawMiniMap(sf::RenderWindow* window)
 }
 
 //RenderLoop
-void Render::update(World& world)
+void Render::update(World& world)//
 {
 	// run the program as long as the window is open
 	// check all the window's events that were triggered since the last iteration of the loop
@@ -242,8 +240,6 @@ void Render::update(World& world)
 	while (window.pollEvent(event))
 	{
 		// "close requested" event: we close the window
-		if (event.type == sf::Event::Closed)
-			window.close();
 		switch (event.type)
 		{
 		case sf::Event::Closed:
@@ -293,7 +289,7 @@ void Render::update(World& world)
 	window.display();
 }
 
-sf::Vector2f getMiniMapSize()
+sf::Vector2f getMiniMapSize()//
 {
 	sf::Vector2f mapPixelSize = sf::Vector2f(map->width * map->tileSet->tileWidth, map->height * map->tileSet->tileHeight);
 	sf::Vector2f miniMapSize = mapPixelSize;
@@ -329,6 +325,8 @@ int main()
 {
 	World world;
 	Render renderer;
+	window.setFramerateLimit(60);
+	window.setVerticalSyncEnabled(true);
 
 	map->createMap(map, "test.json");
 	view.setViewport(sf::FloatRect(0, 0, 0.8f, 1.0f));
@@ -337,11 +335,6 @@ int main()
 	miniMap.setSize(getMiniMapSize());
 	miniMap.setCenter(sf::Vector2f(map->width * map->tileSet->tileWidth / 2, map->height * map->tileSet->tileHeight / 2));
 
-	std::clock_t start;
-	std::clock_t end;
-	double sleepTime;
-	int duration;
-
 	enemy->scale.x = map->tileSet->tileWidth / float(32);
 	enemy->scale.y = map->tileSet->tileHeight / float(32);
 
@@ -349,20 +342,7 @@ int main()
 
 	while (true)
 	{
-		start = std::clock();
-
 		world.update();
 		renderer.update(world);
-		window.setView(view);
-
-		end = std::clock();
-
-		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
-		std::cout << duration << std::endl;
-		sleepTime = 1000 / fpsCap - duration;
-		if (sleepTime > 0)
-		{
-			Sleep(sleepTime);
-		}
 	}
 }
