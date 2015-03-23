@@ -6,6 +6,7 @@
 #include <windows.h>
 #include "gameObjects.h"
 #include "mapManager.h"
+#include "render.h"
 
 extern TextureCollection textures;
 
@@ -323,10 +324,8 @@ sf::Vector2f getMiniMapSize()//
 
 int main()
 {
+	Render window(1280, 720, "my rts");
 	World world;
-	Render renderer;
-	window.setFramerateLimit(60);
-	window.setVerticalSyncEnabled(true);
 
 	map->createMap(map, "test.json");
 	view.setViewport(sf::FloatRect(0, 0, 0.8f, 1.0f));

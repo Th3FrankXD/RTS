@@ -1,5 +1,24 @@
 #include "world.h"
 
+//Constructor
+World::World()
+{
+}
+
+//Destructor
+World::~World()
+{
+
+}
+
+//WorldLoop
+void World::update()
+{
+	checkMouseEvents();
+	rotateToVect(enemy->target);
+	moveToTarget();
+}
+
 //Rotate sprite to target vector
 void World::rotateToVect(sf::Vector2f target)
 {
@@ -97,23 +116,4 @@ void World::checkMouseEvents()
 			enemy->target = mouseCoords;
 		}
 	}
-}
-
-//Constructor
-World::World()
-{
-}
-
-//Destructor
-World::~World()
-{
-
-}
-
-//WorldLoop
-void World::update()
-{
-	checkMouseEvents();
-	rotateToVect(enemy->target);
-	moveToTarget();
 }

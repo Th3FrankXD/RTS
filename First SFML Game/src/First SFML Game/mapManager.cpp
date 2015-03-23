@@ -13,16 +13,19 @@ extern TextureCollection textures;
 
 using namespace rapidjson;
 
+//Constructor
 Map::Map()
 {
 
 }
 
+//Destructor
 Map::~Map()
 {
 	delete this->tileSet;
 }
 
+//Gets the json file
 void getFile(std::string* txt, std::string mapName)
 {
 	std::ifstream openFile(mapName);
@@ -39,6 +42,7 @@ void getFile(std::string* txt, std::string mapName)
 	}
 }
 
+//Parses the json file
 void parser(std::string* txt, Map* map)
 {
 	Document doc;
@@ -70,16 +74,21 @@ void parser(std::string* txt, Map* map)
 	}
 }
 
+///////////TileSet//////////////
+
+//Constructor
 TileSet::TileSet()
 {
 
 }
 
+//Destructor
 TileSet::~TileSet()
 {
 
 }
 
+//creates a vector of images from an tileset
 void TileSet::setTextureData()
 {
 	sf::Image tileMapImage;
@@ -101,12 +110,14 @@ void TileSet::setTextureData()
 	}
 }
 
+//returns the texture from the data vector
 sf::Texture* Map::getTexture(int x, int y)
 {
 	int index = this->data[y][x];
 	return this->tileSet->data[index];
 }
 
+//creates the map
 void Map::createMap(Map* map, std::string mapName)
 {
 	std::string txt;
