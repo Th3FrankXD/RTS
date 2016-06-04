@@ -1,26 +1,22 @@
-﻿Build started 3/19/2015 1:07:02 AM.
-     1>Project "C:\Users\frank\Documents\RTS\First SFML Game\src\First SFML Game\First SFML Game.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\frank\Documents\RTS\First SFML Game\src\First SFML Game\\..\..\lib\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
-         main.cpp
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(33): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(56): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(83): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(99): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(167): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(168): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(169): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(170): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(188): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(257): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\frank\Documents\RTS\First SFML Game\src\Debug\First SFML Game.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\frank\Documents\RTS\First SFML Game\src\First SFML Game\\..\..\lib\include\SFML-2.2\lib" "sfml-window-d.lib" "sfml-system-d.lib" "sfml-network-d.lib" "sfml-graphics-d.lib" "sfml-audio-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\frank\Documents\RTS\First SFML Game\src\Debug\First SFML Game.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\frank\Documents\RTS\First SFML Game\src\Debug\First SFML Game.lib" /MACHINE:X86 Debug\gameObjects.obj
-         Debug\main.obj
-         Debug\mapManager.obj
-         Debug\textureCollector.obj
-         First SFML Game.vcxproj -> C:\Users\frank\Documents\RTS\First SFML Game\src\Debug\First SFML Game.exe
-     1>Done Building Project "C:\Users\frank\Documents\RTS\First SFML Game\src\First SFML Game\First SFML Game.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:01.17
+﻿  main.cpp
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(29): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(43): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(66): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(117): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(121): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(128): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(194): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(195): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(196): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(197): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(215): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(265): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(265): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(266): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(270): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(280): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(298): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(335): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(338): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\frank\documents\rts\first sfml game\src\first sfml game\main.cpp(372): warning C4244: 'argument': conversion from 'double' to 'DWORD', possible loss of data
+  First SFML Game.vcxproj -> C:\Users\frank\Documents\RTS\First SFML Game\src\Debug\First SFML Game.exe

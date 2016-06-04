@@ -276,7 +276,7 @@ void Render::update(World& world)
 
 	sf::RectangleShape rect;
 	rect.setSize(sf::Vector2f(10, 10));
-	sf::Vector2f currentLoc = sf::Vector2f(128, 128);
+	sf::Vector2f currentLoc = sf::Vector2f(enemy->location.x / (map->width * map->tileSet->tileWidth / (resX / 5)) - 5, enemy->location.y / (map->height * map->tileSet->tileHeight / (resY * (resX / 5 / resY))) - 5);
 	float rectXPos = resX * 0.2 * (miniMapXOffSet / (map->width * map->tileSet->tileWidth)) / float(2);
 	float rectYPos = resY * (resX / 5 / resY) * (miniMapYOffSet / (map->height * map->tileSet->tileHeight)) / float(2);
 	rect.setPosition(sf::Vector2f(currentLoc.x + rectXPos, currentLoc.y + rectYPos));
@@ -347,6 +347,7 @@ int main()
 
 	enemy->speed = enemy->speed * enemy->scale.x;
 
+	int skip = 0;
 	while (true)
 	{
 		start = std::clock();
@@ -358,7 +359,13 @@ int main()
 		end = std::clock();
 
 		duration = (end - start) / (CLOCKS_PER_SEC / 1000);
-		std::cout << duration << std::endl;
+		if (skip > 10) {
+			std::cout << duration << "ms" << std::endl;
+			skip = 0;
+		}
+		else {
+			skip++;
+		}
 		sleepTime = 1000 / fpsCap - duration;
 		if (sleepTime > 0)
 		{
